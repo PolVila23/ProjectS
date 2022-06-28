@@ -7,7 +7,7 @@ public class Spaceship : MonoBehaviour
 
     private const float G = 6.67408f;
 
-    public float speed;
+    public float initialSpeed;
 
     public Rigidbody2D rb;
 
@@ -22,7 +22,7 @@ public class Spaceship : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         Attractors = FindObjectsOfType<Attractor>();
 
-        Vector2 force = new Vector2(0, speed);
+        Vector2 force = new Vector2(0, initialSpeed);
         
         rb.AddForce(force);
 
@@ -66,5 +66,10 @@ public class Spaceship : MonoBehaviour
         force = direction.normalized * forceMagnitude;
 
         //rb.AddForce(force);
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        Debug.Log("Haha t'has xocat lol");
     }
 }
