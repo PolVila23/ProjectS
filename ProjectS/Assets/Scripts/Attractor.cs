@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class Attractor : MonoBehaviour
 {
-    const float G = 6.67408f;
+    //const float G = 6.67408f;
 
-    Rigidbody2D rb;
+    public Rigidbody2D rb;
 
     //public static List<Attractor> Attractors;
-    public static Spaceship[] Spaceships;
+    //public static Spaceship[] Spaceships;
 
     void Start ()
     {
         rb = GetComponent<Rigidbody2D>();
-        Spaceships = FindObjectsOfType<Spaceship>();
+        //Spaceships = FindObjectsOfType<Spaceship>();
 
     }
 
@@ -37,7 +37,7 @@ public class Attractor : MonoBehaviour
         }
     }*/
 
-    void FixedUpdate()
+    /*void FixedUpdate()
     {
         foreach (Spaceship spaceship in Spaceships)
         {
@@ -58,5 +58,5 @@ public class Attractor : MonoBehaviour
         Vector2 force = direction.normalized * forceMagnitude;
 
         rbToAttract.AddForce(force);
-    }
+    }*/
 }
