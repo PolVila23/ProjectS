@@ -20,9 +20,9 @@ public class UI_Inventory : MonoBehaviour
     }
 
     private void RefreshInventoryItems() {
-        float x = 0.5f;
+        float x = 0.7f;
         float y = -0.5f;
-        float itemSlotCellSize = 90f;
+        float itemSlotCellSize = 170f;
 
         foreach(Item item in inventory.GetItemList()) {
             Transform itemSlot = Instantiate(itemSlotTemplate, itemSlotContainer);

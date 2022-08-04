@@ -78,12 +78,14 @@ public class Spaceship : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.name == finish.name) {
-            SceneManager.LoadScene("YouWin");
-        }
-        else {
-            Debug.Log("Haha t'has xocat lol");
-            StopLevel();
+        if (play) {
+            if (finish is null || other.name != finish.name) {
+                Debug.Log("Haha t'has xocat lol");
+                StopLevel();
+            }
+            else {
+                SceneManager.LoadScene("YouWin");
+            }
         }
     }
 
@@ -105,9 +107,19 @@ public class Spaceship : MonoBehaviour
     public void StopLevel() {
         play = false;
         rb.velocity = new Vector2(0, 0);
-        transform.position = new Vector2(0, -25);
+        transform.position = new Vector2(0, -20);
         transform.rotation = Quaternion.AngleAxis(0, Vector3.forward);
         StartButton.SetActive(true);
         StopButton.SetActive(false);
+    }
+
+    public void ResetScene() {
+        Attractors = FindObjectsOfType<Attractor>();
+        finish = FindObjectOfType<Finish>();
+
+        foreach (Attractor attractor in Attractors) {
+            Destroy(attractor);
+        }
+
     }
 }
