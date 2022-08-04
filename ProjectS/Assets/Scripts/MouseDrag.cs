@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class MouseDrag : MonoBehaviour
 {
+    public bool isDraggable;
     private float startX;
     private float startY;
-    private bool isBeingHeld = false;
+    public bool isBeingHeld = false;
 
     // Update is called once per frame
     void Update()
@@ -23,7 +24,7 @@ public class MouseDrag : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && isDraggable)
         {
             Vector3 mousePos;
             mousePos = Input.mousePosition;

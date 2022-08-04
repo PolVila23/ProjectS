@@ -29,8 +29,7 @@ public class Spaceship : MonoBehaviour
     {
         play = false;
         rb = GetComponent<Rigidbody2D>();
-        Attractors = FindObjectsOfType<Attractor>();
-        finish = FindObjectOfType<Finish>();
+        
         StartButton = GameObject.Find("StartButton");
         StopButton = GameObject.Find("StopButton");
         StopButton.SetActive(false);
@@ -89,19 +88,24 @@ public class Spaceship : MonoBehaviour
     }
 
     public void StartLevel() {
-        play = true;
 
-        Vector2 force = new Vector2(0, initialSpeed);
-        
-        rb.AddForce(force);
+        if (!play) {
+            play = true;
 
-        posAnt = transform.position;
+            Vector2 force = new Vector2(0, initialSpeed);
+            
+            rb.AddForce(force);
+
+            posAnt = transform.position;
+            Attractors = FindObjectsOfType<Attractor>();
+            finish = FindObjectOfType<Finish>();
+        }
     }
 
     public void StopLevel() {
         play = false;
         rb.velocity = new Vector2(0, 0);
-        transform.position = new Vector2(-0.15f, -7.12f);
+        transform.position = new Vector2(0, -25);
         transform.rotation = Quaternion.AngleAxis(0, Vector3.forward);
         StartButton.SetActive(true);
         StopButton.SetActive(false);
