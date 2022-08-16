@@ -40,4 +40,6 @@ public class UI_Inventory : MonoBehaviour
             }
         }
     }
+
+    
 }

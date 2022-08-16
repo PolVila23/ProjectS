@@ -33,7 +33,10 @@ public class ItemSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                                         break;
             
         }
-        spawned.GetComponent<MouseDrag>().isBeingHeld = true;
+        MouseDrag md = spawned.GetComponent<MouseDrag>();
+        md.isBeingHeld = true;
+        md.Select();
+
 
         Debug.Log("Spawned");
 

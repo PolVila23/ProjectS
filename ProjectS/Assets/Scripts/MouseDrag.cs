@@ -8,6 +8,10 @@ public class MouseDrag : MonoBehaviour
     private float startX;
     private float startY;
     public bool isBeingHeld = false;
+    
+    public static GameObject lastSelected;
+
+    public static short order = -32768;
 
     // Update is called once per frame
     void Update()
@@ -22,10 +26,20 @@ public class MouseDrag : MonoBehaviour
         }
     }
 
+    public void Select() {
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.sortingOrder = order;
+        ++order;
+
+        lastSelected = this.gameObject;
+    }
+
     private void OnMouseDown()
     {
         if (Input.GetMouseButtonDown(0) && isDraggable)
         {
+            Select();
+
             Vector3 mousePos;
             mousePos = Input.mousePosition;
             mousePos = Camera.main.ScreenToWorldPoint(mousePos);
