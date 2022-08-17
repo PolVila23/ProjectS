@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+
 
 public class Spaceship : MonoBehaviour
 {
@@ -13,31 +13,22 @@ public class Spaceship : MonoBehaviour
     public Rigidbody2D rb;
 
     public static Attractor[] Attractors;
-
-    private Finish finish;
+    private static Finish finish;
 
     private Vector2 posAnt;
 
-    private bool play;
-
-    private GameObject StartButton;
-    private GameObject StopButton;
+    [SerializeField] private LevelController levelController;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        play = false;
         rb = GetComponent<Rigidbody2D>();
-        
-        StartButton = GameObject.Find("StartButton");
-        StopButton = GameObject.Find("StopButton");
-        StopButton.SetActive(false);
     }
 
     void FixedUpdate()
     {
-        if (play) {
+        if (levelController.play) {
             Vector2 totalForce = new Vector2(0, 0);
             foreach (Attractor attractor in Attractors)
             {
@@ -78,48 +69,30 @@ public class Spaceship : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (play) {
+        if (levelController.play) {
             if (finish is null || other.name != finish.name) {
-                Debug.Log("Haha t'has xocat lol");
-                StopLevel();
+                levelController.Lose();
             }
             else {
-                SceneManager.LoadScene("YouWin");
+                levelController.Win();
             }
         }
     }
 
     public void StartLevel() {
 
-        if (!play) {
-            play = true;
-
-            Vector2 force = new Vector2(0, initialSpeed);
-            
-            rb.AddForce(force);
-
-            posAnt = transform.position;
-            Attractors = FindObjectsOfType<Attractor>();
-            finish = FindObjectOfType<Finish>();
-        }
-    }
-
-    public void StopLevel() {
-        play = false;
-        rb.velocity = new Vector2(0, 0);
-        transform.position = new Vector2(0, -20);
-        transform.rotation = Quaternion.AngleAxis(0, Vector3.forward);
-        StartButton.SetActive(true);
-        StopButton.SetActive(false);
-    }
-
-    public void ResetScene() {
         Attractors = FindObjectsOfType<Attractor>();
         finish = FindObjectOfType<Finish>();
 
-        foreach (Attractor attractor in Attractors) {
-            Destroy(attractor);
-        }
+        Vector2 force = new Vector2(0, initialSpeed);    
+        rb.AddForce(force);
+        posAnt = transform.position;
+    }
 
+    public void StopLevel() {
+
+        rb.velocity = new Vector2(0, 0);
+        transform.position = new Vector2(0, -20);
+        transform.rotation = Quaternion.AngleAxis(0, Vector3.forward);
     }
 }
