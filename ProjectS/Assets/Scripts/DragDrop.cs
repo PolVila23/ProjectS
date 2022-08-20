@@ -1,18 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DragDrop : MonoBehaviour
-{
-    private GameObject Selected;
+{   
+    private GameObject LastSelected;
+    [HideInInspector] public GameObject Selected;
 
     private float startX;
     private float startY;
 
-    private float order = 0;
+    [SerializeField] private GameObject Trash;
+
+    public float order = 0;
+
+    private LevelController levelController;
+    private LevelCreatorController levelCreatorController;
+
+    void Start() {
+        levelController = FindObjectOfType<LevelController>();
+
+        Scene scene = SceneManager.GetActiveScene();
+        if (scene.name == "LevelCreator") levelCreatorController = FindObjectOfType<LevelCreatorController>();
+    }
 
     private void Update() {
-        if (Input.GetMouseButtonDown(0)) {
+        if (!levelController.play && Input.GetMouseButtonDown(0)) {
+            Debug.Log("Check hit");
             CheckHitObject();
         }
         if (Input.GetMouseButton(0)) {
@@ -25,9 +40,11 @@ public class DragDrop : MonoBehaviour
 
     private void CheckHitObject() {
         RaycastHit2D hit2D = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition));
+        
+        if (LastSelected != null) LastSelected.transform.Find("Selection").gameObject.SetActive(false);
 
         if (hit2D.collider != null) {
-            //if (!hit2D.collider.CompareTag("planet")) return;
+            if (!hit2D.collider.gameObject.HasTag("Drag")) return;
 
             Selected = hit2D.transform.gameObject;
 
@@ -39,6 +56,11 @@ public class DragDrop : MonoBehaviour
             startY = mousePos.y - Selected.transform.position.y;
             
             order -= 0.0001f;
+
+            if (levelCreatorController != null) {
+                levelCreatorController.Select(ref Selected);
+                Selected.transform.Find("Selection").gameObject.SetActive(true);
+            }
         }
     }
 
@@ -53,7 +75,17 @@ public class DragDrop : MonoBehaviour
     }
 
     private void DropObject() {
-        Selected = null;
+
+        if (Selected != null) {
+            LastSelected = Selected;
+            
+            if (((Vector2)(Selected.transform.position) - (Vector2)(Trash.transform.position)).magnitude <= 5) {
+                Destroy(Selected);
+                LastSelected = null;
+            }
+
+            Selected = null;
+        }
     }
 }
 

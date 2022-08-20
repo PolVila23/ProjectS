@@ -15,41 +15,39 @@ public class LevelCreatorController : MonoBehaviour
 
 
     public void ChangeSize(float n) {
-        Debug.Log(n);
+        Debug.Log("ChangeSize " + selected.name + " " + n);
         if (selected != null) {
-            if (selected.tag == "End") selected.transform.localScale = new Vector3(n, n/2, n); 
+            if (selected.HasTag("Finish")) selected.transform.localScale = new Vector3(n, n/2, n); 
             else selected.transform.localScale = new Vector3(n, n, n);
         }
     }
 
 
     public void Select (ref GameObject gameObject) {
+        Debug.Log(gameObject.name + "selected");
         selected = gameObject;
 
-        switch (selected.tag) {
-            default: break;
+        slider.minValue = 0;
+        slider.maxValue = 100;
+        slider.SetValueWithoutNotify(3); //Necessari pq sino salta OnValueChanged al cambiar minim o maxim (si el valor estava per sota/sobre)
 
-            case "Planet": 
-                slider.minValue = 0.5f;
-                slider.maxValue = 4;
-                break;
-            
-            case "Sun": 
-                slider.minValue = 1.5f;
-                slider.maxValue = 7;
-                break;
-            
-            case "Asteroid": 
-                slider.minValue = 0.25f;
-                slider.maxValue = 4;
-                break;
-
-            case "End": 
-                slider.minValue = 10f;
-                slider.maxValue = 40;
-                break;
+        if (selected.HasTag("Planet")) {
+            slider.minValue = 0.5f;
+            slider.maxValue = 4;
         }
-
-        slider.value = selected.transform.localScale.x;
+        else if (selected.HasTag("Sun")) {
+            slider.minValue = 1.5f;
+            slider.maxValue = 7;
+        }
+        else if (selected.HasTag("Asteroid")) {
+            slider.minValue = 0.25f;
+            slider.maxValue = 4;
+        }
+        else if (selected.HasTag("Finish")) {
+            slider.SetValueWithoutNotify(15); //Necessari pq sino salta OnValueChanged al cambiar minim o maxim (si el valor estava per sota/sobre)
+            slider.minValue = 5;
+            slider.maxValue = 30;
+        }
+        slider.SetValueWithoutNotify(selected.transform.localScale.x);
     }
 }

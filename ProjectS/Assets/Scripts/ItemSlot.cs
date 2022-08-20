@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ItemSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class ItemSlot : MonoBehaviour, IPointerDownHandler/*, IPointerUpHandler*/
 {
     public GameObject Planet;
     public GameObject Asteroid;
@@ -12,6 +12,8 @@ public class ItemSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     private GameObject spawned = null;
 
+    [SerializeField] private LevelController levelController;
+
 
     public void Spawn() {
         Item.ItemType itemType = GetComponent<Item>().itemType;
@@ -19,7 +21,7 @@ public class ItemSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         Vector3 mousePos;
         mousePos = Input.mousePosition;
         mousePos = Camera.main.ScreenToWorldPoint(mousePos);
-        mousePos.z = 0;
+        mousePos.z = levelController.GetComponent<DragDrop>().order;
 
         switch (itemType) {
             default: break;
@@ -33,9 +35,10 @@ public class ItemSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                                         break;
             
         }
-        MouseDrag md = spawned.GetComponent<MouseDrag>();
+        /*MouseDrag md = spawned.GetComponent<MouseDrag>();
         md.isBeingHeld = true;
-        md.Select();
+        md.Select();*/
+        spawned.AddTag("Drag");
 
 
         Debug.Log("Spawned");
@@ -48,8 +51,8 @@ public class ItemSlot : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         Debug.Log("OnPointerDown");
     }
 
-    public void OnPointerUp(PointerEventData eventData) {
+    /*public void OnPointerUp(PointerEventData eventData) {
         Debug.Log("OnPointerUp");
         spawned.GetComponent<MouseDrag>().isBeingHeld = false;
-    }
+    }*/
 }
