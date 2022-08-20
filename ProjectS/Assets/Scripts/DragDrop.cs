@@ -1,31 +1,59 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
+public class DragDrop : MonoBehaviour
 {
-    [SerializeField] private Canvas canvas;
-    private RectTransform rectTransform;
+    private GameObject Selected;
 
-    private void Awake() {
-        rectTransform = GetComponent<RectTransform>();
+    private float startX;
+    private float startY;
+
+    private float order = 0;
+
+    private void Update() {
+        if (Input.GetMouseButtonDown(0)) {
+            CheckHitObject();
+        }
+        if (Input.GetMouseButton(0)) {
+            DragObject();
+        }
+        if (Input.GetMouseButtonUp(0)) {
+            DropObject();
+        }
     }
 
-    public void OnBeginDrag(PointerEventData eventData) {
-        Debug.Log("OnBeginDrag");
+    private void CheckHitObject() {
+        RaycastHit2D hit2D = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition));
+
+        if (hit2D.collider != null) {
+            //if (!hit2D.collider.CompareTag("planet")) return;
+
+            Selected = hit2D.transform.gameObject;
+
+            Vector3 mousePos;
+            mousePos = Input.mousePosition;
+            mousePos = Camera.main.ScreenToWorldPoint(mousePos);
+
+            startX = mousePos.x - Selected.transform.position.x;
+            startY = mousePos.y - Selected.transform.position.y;
+            
+            order -= 0.0001f;
+        }
     }
 
-    public void OnDrag(PointerEventData eventData) {
-        Debug.Log("OnDrag");
-        rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
+    private void DragObject() {
+        if (Selected != null) {
+            Vector3 mousePos;
+            mousePos = Input.mousePosition;
+            mousePos = Camera.main.ScreenToWorldPoint(mousePos);
+
+            Selected.transform.position = new Vector3(mousePos.x - startX, mousePos.y - startY, order);
+        }
     }
 
-    public void OnEndDrag(PointerEventData eventData) {
-        Debug.Log("OnEndDrag");
-    }
-
-    public void OnPointerDown(PointerEventData eventData) {
-        Debug.Log("OnPointerDown");
+    private void DropObject() {
+        Selected = null;
     }
 }
+

@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+
 
 
 public class MouseDrag : MonoBehaviour
 {
-    public bool isDraggable;
+    private bool isDraggable;
     private float startX;
     private float startY;
     public bool isBeingHeld = false;
@@ -15,19 +15,31 @@ public class MouseDrag : MonoBehaviour
     public static short order = -32768;
 
     [SerializeField] private static LevelController levelController;
+    [SerializeField] private static LevelCreatorController levelCreatorController;
 
     private bool levelCreator;
     public static GameObject lastSelected;
-    private Slider slider = null;
+    
 
     void Start() {
         if (levelController == null) levelController = FindObjectOfType<LevelController>();
 
+        
         levelCreator = false;
         Scene scene = SceneManager.GetActiveScene();
         if (scene.name == "LevelCreator") {
             levelCreator = true;
-            slider = FindObjectOfType<Slider>();
+            if (levelCreatorController == null) levelCreatorController = FindObjectOfType<LevelCreatorController>();
+        }
+        
+        isDraggable = false;
+
+        switch (this.tag) {
+            default: break;
+            case "Planet": isDraggable = true; break;
+            case "Sun": if (levelCreator) isDraggable = true; break;
+            case "Asteroid": if (levelCreator) isDraggable = true; break;
+            case "End": if (levelCreator) isDraggable = true; break;
         }
     }
     // Update is called once per frame
@@ -51,8 +63,7 @@ public class MouseDrag : MonoBehaviour
         if (levelCreator) {
             lastSelected = this.gameObject;
 
-            slider.minValue = 0.5f;
-            //slider.Select(ref lastSelected);
+            levelCreatorController.Select(ref lastSelected);
         }
     }
 
