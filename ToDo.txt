@@ -4,3 +4,4 @@ LevelCreator:
  - Amagar barra mida quan no hi ha res seleccionat
  - Boto clear (Sobre paperera? paperera nomes quan planeta seleccionat, sino clear all?)
  - Amagar inventari mentre 
+ - Save & Load
