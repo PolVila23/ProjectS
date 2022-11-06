@@ -79,7 +79,7 @@ public class DragDrop : MonoBehaviour
         if (Selected != null) {
             LastSelected = Selected;
             
-            if (((Vector2)(Selected.transform.position) - (Vector2)(Trash.transform.position)).magnitude <= 5) {
+            if (((Vector2)(Selected.transform.position) + new Vector2(startX, startY) - (Vector2)(Trash.transform.position)).magnitude <= 5) { //Centrat al ratoli (+ new Vector2(startX, startY)) o centrat al centre de l'objecte?
                 Destroy(Selected);
                 LastSelected = null;
             }
